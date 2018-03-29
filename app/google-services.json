@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1019054344733",
+    "firebase_url": "https://sendkey-48873.firebaseio.com",
+    "project_id": "sendkey-48873",
+    "storage_bucket": "sendkey-48873.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019054344733:android:e5365459800fa2c8",
+        "android_client_info": {
+          "package_name": "com.app.sendkey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019054344733-eub15urn5s7kod3ebsem15qrfs8sdid6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.sendkey",
+            "certificate_hash": "401f816599429a02cf5ebee7087725ee15fa7888"
+          }
+        },
+        {
+          "client_id": "1019054344733-fjdohlgul3tirp9b8fh5m4b8q3571p6v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ1Cb7AiAzTV6jHyDnzY1U9x_dyeV-CoQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019054344733-fjdohlgul3tirp9b8fh5m4b8q3571p6v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
