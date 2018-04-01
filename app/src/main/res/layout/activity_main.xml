@@ -27,5 +27,4 @@
             android:dividerHeight="2dp"/>
 
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

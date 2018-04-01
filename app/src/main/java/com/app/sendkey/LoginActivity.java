@@ -101,23 +101,20 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    userRef = mDatabaseRef.child(auth.getCurrentUser().getUid());
-                                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    mDatabaseRef = mDatabaseRef.child(auth.getCurrentUser().getUid());
+                                    mDatabaseRef.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             user = dataSnapshot.getValue(User.class);
-                                            //                tickets.add(ticket_details);
-                                            //Log.v("History ", "ticket_details : source : " + ticket_details.getSource());
-
-                                            Log.v("MainActivity", user.user_type);
-
-                                            if(user.user_type.equals("owner")) {
+                                            if(user.user_type.equals("user")) {
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 startActivity(intent);
+
+                                                finish();
                                             }
                                             else {
-                                                Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                                startActivity(intent);
+                                                Toast.makeText(LoginActivity.this, "You are not a user! Please login from owner's app.", Toast.LENGTH_LONG).show();
                                             }
                                         }
 
@@ -126,8 +123,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                         }
                                     });
-
-                                    finish();
                                 }
                             }
                         });

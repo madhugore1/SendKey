@@ -2,6 +2,7 @@ package com.app.sendkey;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,10 +32,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserReference;
+    private FirebaseUser firebaseUser;
     public ArrayList<User> users;
     public ListView usersListView;
     UserListAdapter userListAdapter;
@@ -51,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String user_selected = users.get(position).uid;
+                String email_user_selected = users.get(position).email;
                 Intent chatIntent = new Intent(MainActivity.this, ChatActivity.class);
                 chatIntent.putExtra("user_selected", user_selected);
+                chatIntent.putExtra("email_user_selected", email_user_selected);
                 startActivity(chatIntent);
 
             }
@@ -63,24 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //get current user
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-//        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserReference = mFirebaseDatabase.getReference("users");
-
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    // user auth state is changed - user is null
-                    // launch login activity
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
-                }
-            }
-        };
 
         mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -89,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     User user = snapshot.getValue(User.class);
                     //                tickets.add(ticket_details);
                     //Log.v("History ", "ticket_details : source : " + ticket_details.getSource());
-                    if(user.user_type.equals("user")) {
+                    if(user.user_type.equals("owner")) {
                         users.add(user);
                     }
                     //Log.v("MainActivity", user.email + " " + user.user_type);
@@ -106,45 +94,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        mUserReference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    User user = snapshot.getValue(User.class);
-//                    users.add(user);
-//                    userListAdapter.notifyDataSetChanged();
-//                }
-//                Log.v("History", "Test Test Test");
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(MainActivity.this, "No users found", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
     }
 
     //sign out method
     public void signOut() {
         auth.signOut();
     }
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        super.onBackPressed();
+//        finish();
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,5 +152,11 @@ public class MainActivity extends AppCompatActivity {
         if (authListener != null) {
             auth.removeAuthStateListener(authListener);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

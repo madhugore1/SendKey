@@ -22,8 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignupActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
-    private Button btnSignIn, btnSignUp, btnSignUpUser, btnSignUpOwner;
-    private boolean bool_user = true;
+    private Button btnSignIn, btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseDatabase mFirebaseInstance;
@@ -42,8 +41,6 @@ public class SignupActivity extends AppCompatActivity {
         mDatabaseRef = mFirebaseInstance.getReference("users");
 //        mOwnerRef = mFirebaseInstance.getReference("owners");
 
-        btnSignUpUser = (Button) findViewById(R.id.btn_signUp_user);
-        btnSignUpOwner = (Button)findViewById(R.id.btn_signUp_owner);
         btnSignUp = (Button)findViewById(R.id.sign_up_button);
         btnSignIn = (Button)findViewById(R.id.sign_in_button);
         inputEmail = (EditText) findViewById(R.id.email);
@@ -55,36 +52,6 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        btnSignUpUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bool_user = true;
-                //disable owner button
-                btnSignUpOwner.setBackgroundColor(getResources().getColor(R.color.colorDefaultBackground));
-                btnSignUpOwner.setTextColor(getResources().getColor(R.color.colorAccent));
-
-                //enable user button
-                btnSignUpUser.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                btnSignUpUser.setTextColor(getResources().getColor(R.color.colorBlack));
-
-            }
-        });
-
-        btnSignUpOwner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bool_user = false;
-
-                //disable user button
-                btnSignUpUser.setBackgroundColor(getResources().getColor(R.color.colorDefaultBackground));
-                btnSignUpUser.setTextColor(getResources().getColor(R.color.colorAccent));
-
-                //enable owner button
-                btnSignUpOwner.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                btnSignUpOwner.setTextColor(getResources().getColor(R.color.colorBlack));
             }
         });
 
@@ -141,25 +108,14 @@ public class SignupActivity extends AppCompatActivity {
                             currentUser = FirebaseAuth.getInstance().getCurrentUser();
                             String uid = currentUser.getUid();
 
-                            User user;
-                            if(bool_user) {
-                                user = new User(currentUser.getEmail(), "user", currentUser.getUid());
-                            }
-                            else {
-                                user = new User(currentUser.getEmail(), "owner", currentUser.getUid());
-                            }
+                            User user = new User(currentUser.getEmail(), "user", currentUser.getUid());
+
 
                             userChild = mDatabaseRef.child(uid);
                             userChild.setValue(user);
 
-                            if(user.user_type.equals("owner")) {
-                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                            else {
-                                Intent intent = new Intent(SignupActivity.this, UserActivity.class);
-                                startActivity(intent);
-                            }
+                            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                            startActivity(intent);
 
                             finish();
                         }
